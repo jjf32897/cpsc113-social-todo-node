@@ -1,0 +1,16 @@
+h1 {
+  font-family: "sans-serif", Arial;
+}
+
+body {
+  font-family: "sans-serif", Arial;
+  text-align: center;
+}
+
+.task {
+  border: 1px solid black;
+}
+
+input {
+  text-align: center;
+}

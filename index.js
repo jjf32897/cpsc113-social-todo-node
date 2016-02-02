@@ -1,5 +1,6 @@
 var express = require('express');
 var exphbs  = require('express-handlebars');
+var hbs = require('handlebars');
 var app = express();
 var bodyParser = require('body-parser');
 var session = require('express-session');
@@ -16,6 +17,8 @@ var store = new MongoDBStore({
   uri: process.env.MONGO_URL,
   collection: 'sessions'
 });
+app.use(express.static('css'));
+
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
@@ -44,6 +47,14 @@ app.use(function(req, res, next){
   }
 });
 
+// hbs.registerHelper('owner', function(value, options) {
+//     if(value!=req.session.userId) {
+//         return options.inverse(this);
+//     } else {
+//         return options.fn(this);
+//     }
+// });
+
 // Middleware that checks if a user is logged in. If so, the
 // request continues to be processed, otherwise a 403 is returned.
 function isLoggedIn(req, res, next){
@@ -64,6 +75,14 @@ function loadUserTasks(req, res, next) {
       {collaborators: res.locals.currentUser.email}])
     .exec(function(err, tasks){
       if(!err){
+        for (var i = 0; i < tasks.length; i++) {
+          if (tasks[i].owner.toString() == res.locals.currentUser._id.toString())
+          {
+            tasks[i].isOwner = 1;
+          }else{
+            tasks[i].isOwner = 0;
+          }
+        }
         res.locals.tasks = tasks;
       }
       next();
@@ -77,13 +96,19 @@ app.get('/', loadUserTasks, function (req, res) {
 
 // Handle submitted form for new users
 app.post('/user/register', function (req, res) {
-  if(req.body.password !== req.body.password_confirmation){
-      return res.render('index', {errors: "Password and password confirmation do not match"});
+  if (req.body.email === '' || req.body.fl_name === '' || req.body.password === '' || req.body.password_confirmation === '') {
+    return res.render('index', {errors: "Please fill out all fields"});
   }
-  if (req.body.password.length < 1) {
-    err = 'Bad password';
-    res.render('index', {errors: err});
-    return;
+  if (req.body.password !== req.body.password_confirmation){
+    return res.render('index', {errors: "Password and password confirmation do not match"});
+  }
+  if (req.body.fl_name.length > 50 || req.body.password.length > 50) {
+    return res.render('index', {errors: "Your name and password cannot exceed 50 characters"});
+  }
+  var regex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+  if (!regex.test(req.body.email))
+  {
+    return res.render('index', {errors: "Invalid email address"});
   }
 
   // Save the new user
@@ -107,8 +132,7 @@ app.post('/user/register', function (req, res) {
   });
 });
 
-
-
+//logs the user in
 app.post('/user/login', function (req, res) {
   // Try to find this user by email
   Users.findOne({email: req.body.email}, function(err, user){
@@ -132,8 +156,9 @@ app.post('/user/login', function (req, res) {
 
 // Log a user out
 app.get('/user/logout', function(req, res){
-  req.session.destroy();
-  res.redirect('/');
+  req.session.destroy(function(){
+    res.redirect('/');
+  });
 });
 
 //  All the controllers and routes below this require
@@ -147,11 +172,44 @@ app.post('/task/create', function(req, res){
   newTask.title = req.body.title;
   newTask.description = req.body.description;
   newTask.collaborators = [req.body.collaborator1, req.body.collaborator2, req.body.collaborator3];
+  newTask.isComplete = 0;
   newTask.save(function(err, savedTask){
     if(err || !savedTask){
       res.send('Error saving task!');
     }else{
       res.redirect('/');
+    }
+  });
+});
+
+//deletes a task
+app.post('/task/delete/:id', function(req, res){
+  Tasks.remove({_id: req.params.id}, function(err){
+    if (err) {
+      res.send('Error deleting task');
+    }else{
+      res.redirect('/');
+    }
+  });
+});
+
+//marks a task as complete
+app.post('/task/complete/:id', function(req, res){
+  Tasks.findById(req.params.id, function(err, task){
+    if (err) {
+      res.send('Error finding task');
+    }else{
+      var change = 1;
+      if (task.isComplete) {
+        change = 0;
+      }
+      Tasks.update({_id: req.params.id}, {isComplete: change}, function(err){
+        if (err) {
+          res.send('Error updating task');
+        }else{
+          res.redirect('/');
+        }
+      });
     }
   });
 });
