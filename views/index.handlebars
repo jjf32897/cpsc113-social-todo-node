@@ -14,14 +14,12 @@
         {{#if tasks}}
             <ul>
             {{#each tasks}}
-                    <div class="task">
-                      <p>
+                      <div class="tasks-list-item">
                       {{#if this.isComplete}}
                         <span class="task-title"><s>{{this.title}}</s></span>
                       {{else}}
                         <span class="task-title">{{this.title}}</span>
                       {{/if}}
-                      </p>
                       <p><span class="task-description"><i>{{this.description}}</i></span></p>
 
                       {{#if this.isOwner}}
@@ -55,8 +53,8 @@
     </div>
 
 {{else}}
-<h4>Log In</h4>
-<div>
+<div id="login">
+    <h4>Log In</h4>
     <form class="login-form" action="/user/login" method="POST">
         <label for="email">Email</label>
         <input name="email" type="text"><br>
@@ -66,9 +64,8 @@
     </form>
 </div>
 
-<div><hr></div>
-<h4>Register</h4>
-<div>
+<div id="register">
+    <h4>Register</h4>
     <form action="/user/register" method="POST" class="signup-form">
       <input name="fl_name" type="text" class="text-input" placeholder="First &amp; Last Name">
       <input name="email" type="email" class="text-input" placeholder="Email">

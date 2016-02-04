@@ -2,6 +2,7 @@ var express = require('express');
 var exphbs  = require('express-handlebars');
 var hbs = require('handlebars');
 var app = express();
+var nodemailer = require('nodemailer');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var MongoDBStore = require('connect-mongodb-session')(session);
@@ -10,7 +11,14 @@ mongoose.connect(process.env.MONGO_URL);
 var Users = require('./models/users.js');
 var Tasks = require('./models/tasks.js');
 
-
+var smtpTransport = nodemailer.createTransport("SMTP",{
+    service: "Gmail",
+    auth: {
+        user: "cpsc113.todo.notification@gmail.com",
+        // https://www.youtube.com/watch?v=bLE7zsJk4AI
+        pass: "fourwordsalluppercase"
+    }
+});
 
 // Configure our app
 var store = new MongoDBStore({
@@ -18,8 +26,8 @@ var store = new MongoDBStore({
   collection: 'sessions'
 });
 app.use(express.static('css'));
-
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.set('views', __dirname + '/views');
 app.set('view engine', 'handlebars');
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 // Configure session middleware that will parse the cookies
@@ -46,14 +54,6 @@ app.use(function(req, res, next){
     next();
   }
 });
-
-// hbs.registerHelper('owner', function(value, options) {
-//     if(value!=req.session.userId) {
-//         return options.inverse(this);
-//     } else {
-//         return options.fn(this);
-//     }
-// });
 
 // Middleware that checks if a user is logged in. If so, the
 // request continues to be processed, otherwise a 403 is returned.
@@ -102,8 +102,17 @@ app.post('/user/register', function (req, res) {
   if (req.body.password !== req.body.password_confirmation){
     return res.render('index', {errors: "Password and password confirmation do not match"});
   }
-  if (req.body.fl_name.length > 50 || req.body.password.length > 50) {
-    return res.render('index', {errors: "Your name and password cannot exceed 50 characters"});
+  if (req.body.fl_name.length > 50) {
+    return res.render('index', {errors: "Your name cannot exceed 50 characters"});
+  }
+  if (req.body.password.length > 50) {
+    return res.render('index', {errors: "Your password cannot exceed 50 characters"});
+  }
+  if (req.body.email.length > 50) {
+    return res.render('index', {errors: "Your email cannot exceed 50 characters"});rin
+  }
+  if (req.body.fl_name.length < 1) {
+    return res.render('index', {errors: "You must enter a name"});
   }
   var regex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
   if (!regex.test(req.body.email))
@@ -136,16 +145,14 @@ app.post('/user/register', function (req, res) {
 app.post('/user/login', function (req, res) {
   // Try to find this user by email
   Users.findOne({email: req.body.email}, function(err, user){
-
     if(err || !user){
-      res.send('Invalid email address');
-      return;
+      return res.render('index', {errors: 'Invalid email address'});
     }
 
     // See if the hash of their passwords match
     user.comparePassword(req.body.password, function(err, isMatch){
       if(err || !isMatch){
-        res.send('Invalid password');
+        return res.render('index', {errors: 'Bad password'});
       }else{
         req.session.userId = user._id;
         res.redirect('/');
@@ -199,16 +206,41 @@ app.post('/task/complete/:id', function(req, res){
     if (err) {
       res.send('Error finding task');
     }else{
-      var change = 1;
-      if (task.isComplete) {
-        change = 0;
+      var change = 0;
+      if (!task.isComplete) {
+        change = 1;
+        Users.findById(res.locals.currentUser._id, function(err, user){
+          if (err) {
+            res.send('Database error');
+          }else{
+            task.collaborators.push(user.email);
+          }
+        });
+        for (var i = 0; i < task.collaborators.length; i++)
+        {
+          console.log(task.collaborators[i]);
+          smtpTransport.sendMail(
+            {
+              from: 'Jo-Jo\'s CPSC113 Todo Notifier',
+              to: task.collaborators[i],
+              subject: 'One of your tasks has been completed!',
+              text: 'Your task ' + task.title + ' has been completed',
+              html: 'Your task <b>' + task.title + '</b> has been completed.'
+            }
+            , function(error, info){
+            if(error)
+            {
+              return console.log(error);
+            }
+          });
+        }
       }
       Tasks.update({_id: req.params.id}, {isComplete: change}, function(err){
-        if (err) {
-          res.send('Error updating task');
-        }else{
-          res.redirect('/');
-        }
+      if (err) {
+        res.send('Error updating task');
+      }else{
+        res.redirect('/');
+      }
       });
     }
   });

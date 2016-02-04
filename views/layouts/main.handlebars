@@ -4,24 +4,15 @@
     <meta charset="utf-8">
     <title>CPSC113 Todo</title>
     <link href="style.css" rel="stylesheet"/>
-    <!-- <script type="text/javascript">
-      Handlebars.registerHelper('owner', function(owner, options) {
-          if(owner != res.locals.currentUser._id ) {
-            return options.inverse(this);
-          } else {
-            return options.fn(this);
-          }
-        });
-    </script> -->
 </head>
 <body>
 
 
     {{{body}}}
-{{#if currentUser}}
+
   <footer>
       <a href="/user/logout">Logout</a>
   </footer>
-{{/if}}
+
 </body>
 </html>
