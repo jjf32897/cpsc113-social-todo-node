@@ -154,7 +154,7 @@ app.post('/user/login', function (req, res) {
     // See if the hash of their passwords match
     user.comparePassword(req.body.password, function(err, isMatch){
       if(err || !isMatch){
-        return res.render('index', {errors: 'Bad password'});
+        return res.render('index', {errors: 'Invalid password'});
       }else{
         req.session.userId = user._id;
         res.redirect('/');

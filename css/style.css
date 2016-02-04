@@ -20,6 +20,7 @@ body {
 }
 
 .tasks-list-item, .signup-form, .login-form, .create-task {
+  text-align: center;
   width: 500px;
   margin: 10px auto;
   padding: 10px 20px;
@@ -84,7 +85,7 @@ input[type="email"]{
   text-align: center;
   font-style: normal;
   border-radius: 50px;
-  width: 100%;
+  width: 70%;
   border: 1px solid #d31212;
   border-width: 1px 1px 3px;
   box-shadow: 0 -1px 0 rgba(255,255,255,0.1) inset;
@@ -99,7 +100,7 @@ input[type="email"]{
     text-align: center;
     font-style: normal;
     border-radius: 50px;
-    width: 100%;
+    width: 70%;
     border: 1px solid #3ac162;
     border-width: 1px 1px 3px;
     box-shadow: 0 -1px 0 rgba(255,255,255,0.1) inset;
@@ -111,11 +112,6 @@ fieldset {
   border: none;
 }
 
-legend {
-  font-size: 1.4em;
-  margin-bottom: 10px;
-}
-
 label {
   display: block;
   margin-bottom: 8px;
@@ -124,20 +120,6 @@ label {
 label.light {
   font-weight: 300;
   display: inline;
-}
-
-.number {
-  background-color: #5fcf80;
-  color: #fff;
-  height: 30px;
-  width: 30px;
-  display: inline-block;
-  font-size: 0.8em;
-  margin-right: 4px;
-  line-height: 30px;
-  text-align: center;
-  text-shadow: 0 1px 0 rgba(255,255,255,0.2);
-  border-radius: 100%;
 }
 
 @media screen and (min-width: 480px) {

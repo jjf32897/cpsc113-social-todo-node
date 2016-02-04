@@ -7,7 +7,7 @@
 {{/if}}
 
 {{#if currentUser}}
-    <h1><u>Welcome, {{currentUser.name}}!</u></h1>
+    <h1 >Welcome, {{currentUser.name}}!</h1>
     <div>
         {{#if tasks}}
             <ul>
@@ -49,7 +49,7 @@
     <div>
         <form action="/task/create" method="POST" class="create-task">
             <h2>Add a new task</h2>
-            <label for="title">Task Information</label>
+            <label for="title">Task Information:</label>
             <input name="title" type="text" placeholder="Title">
             <input name="description" type="text" placeholder="Description">
             <label for="collaborator1">Collaborators:</label>
