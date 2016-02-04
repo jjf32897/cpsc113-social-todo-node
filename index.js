@@ -3,6 +3,7 @@ var exphbs  = require('express-handlebars');
 var hbs = require('handlebars');
 var app = express();
 var nodemailer = require('nodemailer');
+var emoji = require('node-emoji');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var MongoDBStore = require('connect-mongodb-session')(session);
@@ -96,6 +97,7 @@ app.get('/', loadUserTasks, function (req, res) {
 
 // Handle submitted form for new users
 app.post('/user/register', function (req, res) {
+  // checks for valid registration information
   if (req.body.email === '' || req.body.fl_name === '' || req.body.password === '' || req.body.password_confirmation === '') {
     return res.render('index', {errors: "Please fill out all fields"});
   }
@@ -180,6 +182,7 @@ app.post('/task/create', function(req, res){
   newTask.description = req.body.description;
   newTask.collaborators = [req.body.collaborator1, req.body.collaborator2, req.body.collaborator3];
   newTask.isComplete = false;
+  newTask.emoji = emoji.get('ok_hand');
   newTask.save(function(err, savedTask){
     if(err || !savedTask){
       res.send('Error saving task!');

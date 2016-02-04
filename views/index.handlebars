@@ -1,4 +1,4 @@
-<h1>do stuff socially</h1>
+<h4><a href="/user/logout">Logout</a></h4>
 
 {{#if errors}}
 <div style="color:red" class="validation-error">
@@ -7,36 +7,34 @@
 {{/if}}
 
 {{#if currentUser}}
-    <h2>Welcome, {{currentUser.name}}</h2>
+    <h1><u>Welcome, {{currentUser.name}}!</u></h1>
     <div>
-        <h4>Your Tasks</h4>
-
         {{#if tasks}}
             <ul>
             {{#each tasks}}
                       {{#if this.isComplete}}
                       <div class="tasks-list-item complete-task">
-                        <span class="task-title"><s>{{this.title}}</s></span>
-                        <p><span class="task-description"><i>{{this.description}}</i></span></p>
+                        <h2><span class="task-title"><s>{{this.title}}</s>{{this.emoji}}</span></h2>
+                        <h3><span class="task-description"><s><i>{{this.description}}</i></s></span></h3>
                         <form action='/task/complete/{{this._id}}' method="POST">
-                          <input type="submit" name="toggle-task" class="toggle-task" value="Complete">
+                          <button type="submit" name="toggle-task" class="toggle-task">Complete</button>
                         </form>
                         {{#if this.isOwner}}
                           <form action='/task/delete/{{this._id}}' method="POST">
-                            <input type="submit" name="delete-task" class="delete-task" value="Delete">
+                            <button type="submit" name="delete-task" class="delete-task">Delete</button>
                           </form>
                         {{/if}}
                       </div>
                       {{else}}
                       <div class="tasks-list-item">
-                        <span class="task-title">{{this.title}}</span>
-                        <p><span class="task-description"><i>{{this.description}}</i></span></p>
+                        <h2><span class="task-title">{{this.title}}</span></h2>
+                        <h3><span class="task-description"><i>{{this.description}}</i></span></h3>
                         <form action='/task/complete/{{this._id}}' method="POST">
-                          <input type="submit" name="toggle-task" class="toggle-task" value="Complete">
+                          <button type="submit" name="toggle-task" class="toggle-task">Complete</button>
                         </form>
                         {{#if this.isOwner}}
                           <form action='/task/delete/{{this._id}}' method="POST">
-                            <input type="submit" name="delete-task" class="delete-task" value="Delete">
+                            <button type="submit" name="delete-task" class="delete-task">Delete</button>
                           </form>
                         {{/if}}
                       </div>
@@ -44,43 +42,50 @@
             {{/each}}
             </ul>
         {{else}}
-            No tasks to show!
+            <h2>No tasks to show &#9785;</h2>
         {{/if}}
     </div>
     <hr>
     <div>
-        <h4>Add a new task</h4>
-        <form action="/task/create" method="POST">
-            <input name="title" type="text" placeholder="Title"><br>
-            <input name="description" type="text" placeholder="Description"><br>
-            Collaborators<br>
-            <input name="collaborator1" type="email"><br>
-            <input name="collaborator2" type="email"><br>
-            <input name="collaborator3" type="email"><br>
-            <input type="submit" class="create-task-submit">
+        <form action="/task/create" method="POST" class="create-task">
+            <h2>Add a new task</h2>
+            <label for="title">Task Information</label>
+            <input name="title" type="text" placeholder="Title">
+            <input name="description" type="text" placeholder="Description">
+            <label for="collaborator1">Collaborators:</label>
+            <input name="collaborator1" type="email" placeholder="Collaborator Email"><br>
+            <input name="collaborator2" type="email" placeholder="Collaborator Email"><br>
+            <input name="collaborator3" type="email" placeholder="Collaborator Email"><br>
+            <button type="submit" class="create-task-submit">Add Task</button>
         </form>
     </div>
 
 {{else}}
+<h1>Jo-Jo's Ballin' Social Todo Application</h1>
 <div id="login">
-    <h4>Log In</h4>
     <form class="login-form" action="/user/login" method="POST">
+        <h2>Log In</h2>
         <label for="email">Email</label>
         <input name="email" type="text"><br>
         <label for="password">Password</label>
         <input name="password" type="password"><br>
-        <input type="submit"  class="log-in-submit">
+        <button type="submit"  class="log-in-submit">Log In</button>
     </form>
 </div>
 
 <div id="register">
-    <h4>Register</h4>
     <form action="/user/register" method="POST" class="signup-form">
-      <input name="fl_name" type="text" class="text-input" placeholder="First &amp; Last Name">
-      <input name="email" type="email" class="text-input" placeholder="Email">
-      <input name="password" type="password" class="text-input" placeholder="Password">
-      <input name="password_confirmation" type="password" class="text-input" placeholder="Confirm Password">
-      <input class="sign-up-submit" type="submit">
+      <h2>Register</h2>
+      <label for="fl_name">Name</label>
+      <input name="fl_name" type="text" class="text-input">
+      <label for="email">Email Address</label>
+      <input name="email" type="email" class="text-input">
+      <label for="password">Password</label>
+      <input name="password" type="password" class="text-input">
+      <label for="password_confirmation">Confirm Password</label>
+      <input name="password_confirmation" type="password" class="text-input">
+      <button class="sign-up-submit" type="submit">Register</button>
     </form>
 </div>
+
 {{/if}}

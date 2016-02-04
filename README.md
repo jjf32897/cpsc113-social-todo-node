@@ -1,6 +1,6 @@
-# CPSC113 Social todo app
+# Jo-Jo Feng's CPSC113 Social Todo App
 
-This is my starter app. It is going to be sick.
+This is a collaborative todo application based on Kyle's starter code.
 
 ## How to run this
 

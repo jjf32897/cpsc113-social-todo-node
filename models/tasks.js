@@ -14,6 +14,7 @@ var TaskSchema = new Schema({
     title: stringField,
     description: stringField,
     isComplete: Boolean,
+    emoji: String,
     collaborators: [String]
 });
 
