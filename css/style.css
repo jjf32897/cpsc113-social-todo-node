@@ -10,23 +10,59 @@ body {
   background-color: #eeeeee;
 }
 
+.container{
+  text-align: center;
+}
+
 #login{
   display: inline;
 }
 
-#register{
-  display: inline;
-  vertical-align: middle;
+#register, #new-task-form {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  -webkit-animation-name: animatetop;
+  -webkit-animation-duration: 0.4s;
+  animation-name: animatetop;
+  animation-duration: 0.4s
 }
 
-.tasks-list-item, .signup-form, .login-form, .create-task {
+.tasks-list-item, .login-form {
   text-align: center;
   width: 500px;
   margin: 10px auto;
-  padding: 10px 20px;
+  padding: 20px 20px;
   background: #f4f7f8;
   border-radius: 8px;
-  box-shadow: 10px 10px 5px #cccccc;
+  box-shadow: 10px 10px #cccccc;
+  margin-bottom: 30px;
+}
+
+.signup-form {
+  text-align: center;
+  width: 500px;
+  margin: 10px auto;
+  padding: 20px 20px;
+  background: #f4f7f8;
+  border-radius: 8px;
+  margin-top: 80px;
+}
+
+.create-task {
+  text-align: center;
+  width: 500px;
+  margin: 5px auto;
+  padding: 5px 20px;
+  background: #f4f7f8;
+  border-radius: 8px;
 }
 
 .task-title, .task-description{
@@ -34,7 +70,7 @@ body {
 }
 
 h1, h2, h3 {
-  margin: 0 0 30px 0;
+  /*margin: 0 0 30px 0;*/
   text-align: center;
 }
 
@@ -45,10 +81,18 @@ h4 {
   right: 10px;
 }
 
+hr {
+    color: #f00;
+     background: #f00;
+     width: 75%;
+     height: 5px;
+}
+
 input[type="text"],
 input[type="password"],
 input[type="email"]{
   background: rgba(255,255,255,0.1);
+  text-align: center;
   border: none;
   font-size: 16px;
   height: auto;
@@ -62,8 +106,37 @@ input[type="email"]{
   margin-bottom: 30px;
 }
 
+#registerInstead {
+  padding: 18px 39px 18px 39px;
+  color: #FFF;
+  background-color: #4bc970;
+  font-size: 18px;
+  text-align: center;
+  font-style: normal;
+  border-radius: 5px;
+  width: 20%;
+  border: 1px solid #3ac162;
+  border-width: 1px 1px 3px;
+  box-shadow: 0 -1px 0 rgba(255,255,255,0.1) inset;
+  margin-top: 50px;
+}
+
+#new-task-button {
+  padding: 18px 39px 18px 39px;
+  color: #FFF;
+  background-color: #4bc970;
+  font-size: 18px;
+  text-align: center;
+  font-style: normal;
+  border-radius: 5px;
+  width: 20%;
+  border: 1px solid #3ac162;
+  border-width: 1px 1px 3px;
+  box-shadow: 0 -1px 0 rgba(255,255,255,0.1) inset;
+}
+
 .log-in-submit, .create-task-submit, .sign-up-submit {
-  padding: 19px 39px 18px 39px;
+  padding: 18px 39px 18px 39px;
   color: #FFF;
   background-color: #4bc970;
   font-size: 18px;
@@ -74,7 +147,7 @@ input[type="email"]{
   border: 1px solid #3ac162;
   border-width: 1px 1px 3px;
   box-shadow: 0 -1px 0 rgba(255,255,255,0.1) inset;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .delete-task {
@@ -128,4 +201,14 @@ label.light {
     max-width: 480px;
   }
 
+}
+
+@-webkit-keyframes animatetop {
+    from {top: -300px; opacity: 0}
+    to {top: 0; opacity: 1}
+}
+
+@keyframes animatetop {
+    from {top: -300px; opacity: 0}
+    to {top: 0; opacity: 1}
 }

@@ -8,16 +8,16 @@
 
 {{#if currentUser}}
     <h1 >Welcome, {{currentUser.name}}!</h1>
+    <button id="new-task-button">&#43; Task</button>
     <div>
         {{#if tasks}}
-            <ul>
             {{#each tasks}}
                       {{#if this.isComplete}}
                       <div class="tasks-list-item complete-task">
-                        <h2><span class="task-title"><s>{{this.title}}</s>{{this.emoji}}</span></h2>
+                        <h2><span class="task-title"><s>{{this.title}}</s>&#128588;</span></h2>
                         <h3><span class="task-description"><s><i>{{this.description}}</i></s></span></h3>
                         <form action='/task/complete/{{this._id}}' method="POST">
-                          <button type="submit" name="toggle-task" class="toggle-task">Complete</button>
+                          <button type="submit" name="toggle-task" class="toggle-task">Undo Complete &#8634;</button>
                         </form>
                         {{#if this.isOwner}}
                           <form action='/task/delete/{{this._id}}' method="POST">
@@ -40,52 +40,46 @@
                       </div>
                       {{/if}}
             {{/each}}
-            </ul>
         {{else}}
-            <h2>No tasks to show &#9785;</h2>
+            <h2>No tasks to show &#128554;</h2>
         {{/if}}
     </div>
-    <hr>
-    <div>
+    <div id="new-task-form">
         <form action="/task/create" method="POST" class="create-task">
-            <h2>Add a new task</h2>
-            <label for="title">Task Information:</label>
+            <h2>New task &#128218;</h2>
+            <label for="title">Task Information &#128203;</label>
             <input name="title" type="text" placeholder="Title">
             <input name="description" type="text" placeholder="Description">
-            <label for="collaborator1">Collaborators:</label>
+            <label for="collaborator1">Collaborators &#128101;</label>
             <input name="collaborator1" type="email" placeholder="Collaborator Email"><br>
             <input name="collaborator2" type="email" placeholder="Collaborator Email"><br>
             <input name="collaborator3" type="email" placeholder="Collaborator Email"><br>
-            <button type="submit" class="create-task-submit">Add Task</button>
+            <button type="submit" class="create-task-submit">Add Task &#128204;</button>
         </form>
     </div>
 
 {{else}}
-<h1>Jo-Jo's Ballin' Social Todo Application</h1>
+<h1>DoGether &#128588;</h1>
 <div id="login">
     <form class="login-form" action="/user/login" method="POST">
-        <h2>Log In</h2>
-        <label for="email">Email</label>
-        <input name="email" type="text"><br>
-        <label for="password">Password</label>
-        <input name="password" type="password"><br>
-        <button type="submit"  class="log-in-submit">Log In</button>
+        <h3>Sign in to see your tasks</h3>
+        <input name="email" type="text" placeholder="Enter your email"><br>
+        <input name="password" type="password" placeholder="Password"><br>
+        <button type="submit"  class="log-in-submit">Sign In &#128275;</button>
     </form>
 </div>
 
 <div id="register">
     <form action="/user/register" method="POST" class="signup-form">
-      <h2>Register</h2>
-      <label for="fl_name">Name</label>
-      <input name="fl_name" type="text" class="text-input">
-      <label for="email">Email Address</label>
-      <input name="email" type="email" class="text-input">
-      <label for="password">Password</label>
-      <input name="password" type="password" class="text-input">
-      <label for="password_confirmation">Confirm Password</label>
-      <input name="password_confirmation" type="password" class="text-input">
+      <h2>Create your account</h2>
+      <input name="fl_name" type="text" class="text-input" placeholder="Name">
+      <input name="email" type="email" class="text-input" placeholder="Email Address">
+      <input name="password" type="password" class="text-input" placeholder="Password">
+      <input name="password_confirmation" type="password" class="text-input" placeholder="Confirm Password">
       <button class="sign-up-submit" type="submit">Register</button>
     </form>
 </div>
+
+<button id="registerInstead">Need an account?</button>
 
 {{/if}}

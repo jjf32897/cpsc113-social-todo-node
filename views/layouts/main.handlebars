@@ -4,14 +4,40 @@
     <meta charset="utf-8">
     <title>CPSC113 Todo</title>
     <link href="style.css" rel="stylesheet"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 </head>
 <body>
 
-
+<div class="container">
     {{{body}}}
-
+</div>
   <footer>
   </footer>
+
+<script type="text/javascript">
+  var registerForm = document.getElementById('register');
+  var registerButton = document.getElementById('registerInstead');
+  registerButton.onclick = function() {
+    registerForm.style.display = "block";
+  }
+  window.onclick = function() {
+    if (event.target == registerForm) {
+      registerForm.style.display = "none";
+    }
+  }
+</script>
+<script type="text/javascript">
+  var newTaskForm = document.getElementById('new-task-form');
+  var newTaskButton = document.getElementById('new-task-button');
+  newTaskButton.onclick = function() {
+    newTaskForm.style.display = "block";
+  }
+  window.onclick = function() {
+    if (event.target == newTaskForm) {
+      newTaskForm.style.display = "none";
+    }
+  }
+</script>
 
 </body>
 </html>

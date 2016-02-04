@@ -6,7 +6,7 @@ var Schema = mongoose.Schema,
 var stringField = {
     type: String,
     minlength: 1,
-    maxlength: 500
+    maxlength: 5000
 }
 
 var TaskSchema = new Schema({
@@ -14,7 +14,6 @@ var TaskSchema = new Schema({
     title: stringField,
     description: stringField,
     isComplete: Boolean,
-    emoji: String,
     collaborators: [String]
 });
 

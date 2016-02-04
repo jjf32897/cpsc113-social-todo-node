@@ -3,7 +3,6 @@ var exphbs  = require('express-handlebars');
 var hbs = require('handlebars');
 var app = express();
 var nodemailer = require('nodemailer');
-var emoji = require('node-emoji');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var MongoDBStore = require('connect-mongodb-session')(session);
@@ -76,12 +75,14 @@ function loadUserTasks(req, res, next) {
       {collaborators: res.locals.currentUser.email}])
     .exec(function(err, tasks){
       if(!err){
+        // iterates through tasks and checks if the owner is the current user
+        // if it is, adds a variable called "isOwner" and sets it to true
         for (var i = 0; i < tasks.length; i++) {
           if (tasks[i].owner.toString() == res.locals.currentUser._id.toString())
           {
-            tasks[i].isOwner = 1;
+            tasks[i].isOwner = true;
           }else{
-            tasks[i].isOwner = 0;
+            tasks[i].isOwner = false;
           }
         }
         res.locals.tasks = tasks;
@@ -147,7 +148,7 @@ app.post('/user/register', function (req, res) {
 app.post('/user/login', function (req, res) {
   // Try to find this user by email
   Users.findOne({email: req.body.email}, function(err, user){
-    if(err || !user){
+    if(!user || err){
       return res.render('index', {errors: 'Invalid email address'});
     }
 
@@ -182,7 +183,6 @@ app.post('/task/create', function(req, res){
   newTask.description = req.body.description;
   newTask.collaborators = [req.body.collaborator1, req.body.collaborator2, req.body.collaborator3];
   newTask.isComplete = false;
-  newTask.emoji = emoji.get('ok_hand');
   newTask.save(function(err, savedTask){
     if(err || !savedTask){
       res.send('Error saving task!');
@@ -203,7 +203,7 @@ app.post('/task/delete/:id', function(req, res){
   });
 });
 
-//marks a task as complete
+//marks a task as complete and sends an email to all users collaborating on the task
 app.post('/task/complete/:id', function(req, res){
   Tasks.findById(req.params.id, function(err, task){
     if (err) {
@@ -212,27 +212,36 @@ app.post('/task/complete/:id', function(req, res){
       var change = false;
       if (!task.isComplete) {
         change = true;
+        var collaborators = task.collaborators;
+        for (var i = collaborators.length - 1; i > -1; i--)
+        {
+          if (collaborators[i] == '')
+          {
+            collaborators.splice(i, 1);
+          }
+        }
         Users.findById(res.locals.currentUser._id, function(err, user){
           if (err) {
             res.send('Database error');
           }else{
-            task.collaborators.push(user.email);
+            collaborators[collaborators.length] = user.email;
           }
         });
-        for (var i = 0; i < task.collaborators.length; i++)
+        console.log(collaborators.length);
+        for (var i = 0; i < collaborators.length; i++)
         {
           smtpTransport.sendMail(
             {
               from: 'Jo-Jo\'s CPSC113 Todo Notifier',
-              to: task.collaborators[i],
+              to: collaborators[i],
               subject: 'One of your tasks has been completed!',
               text: 'Your task ' + task.title + ' has been completed',
               html: 'Your task <b>' + task.title + '</b> has been completed.'
             }
-            , function(error, info){
-            if(error)
+            , function(err, info){
+            if(err)
             {
-              return console.log(error);
+              return console.log(err);
             }
           });
         }
