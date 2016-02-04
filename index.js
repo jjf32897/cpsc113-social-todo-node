@@ -179,7 +179,7 @@ app.post('/task/create', function(req, res){
   newTask.title = req.body.title;
   newTask.description = req.body.description;
   newTask.collaborators = [req.body.collaborator1, req.body.collaborator2, req.body.collaborator3];
-  newTask.isComplete = 0;
+  newTask.isComplete = false;
   newTask.save(function(err, savedTask){
     if(err || !savedTask){
       res.send('Error saving task!');
@@ -206,9 +206,9 @@ app.post('/task/complete/:id', function(req, res){
     if (err) {
       res.send('Error finding task');
     }else{
-      var change = 0;
+      var change = false;
       if (!task.isComplete) {
-        change = 1;
+        change = true;
         Users.findById(res.locals.currentUser._id, function(err, user){
           if (err) {
             res.send('Database error');
@@ -218,7 +218,6 @@ app.post('/task/complete/:id', function(req, res){
         });
         for (var i = 0; i < task.collaborators.length; i++)
         {
-          console.log(task.collaborators[i]);
           smtpTransport.sendMail(
             {
               from: 'Jo-Jo\'s CPSC113 Todo Notifier',

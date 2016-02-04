@@ -14,24 +14,33 @@
         {{#if tasks}}
             <ul>
             {{#each tasks}}
-                      <div class="tasks-list-item">
                       {{#if this.isComplete}}
+                      <div class="tasks-list-item complete-task">
                         <span class="task-title"><s>{{this.title}}</s></span>
-                      {{else}}
-                        <span class="task-title">{{this.title}}</span>
-                      {{/if}}
-                      <p><span class="task-description"><i>{{this.description}}</i></span></p>
-
-                      {{#if this.isOwner}}
-                        <form action='/task/delete/{{this._id}}' method="POST">
-                          <input type="submit" name="delete-task" class="delete-task" value="Delete">
+                        <p><span class="task-description"><i>{{this.description}}</i></span></p>
+                        <form action='/task/complete/{{this._id}}' method="POST">
+                          <input type="submit" name="toggle-task" class="toggle-task" value="Complete">
                         </form>
+                        {{#if this.isOwner}}
+                          <form action='/task/delete/{{this._id}}' method="POST">
+                            <input type="submit" name="delete-task" class="delete-task" value="Delete">
+                          </form>
+                        {{/if}}
+                      </div>
+                      {{else}}
+                      <div class="tasks-list-item">
+                        <span class="task-title">{{this.title}}</span>
+                        <p><span class="task-description"><i>{{this.description}}</i></span></p>
+                        <form action='/task/complete/{{this._id}}' method="POST">
+                          <input type="submit" name="toggle-task" class="toggle-task" value="Complete">
+                        </form>
+                        {{#if this.isOwner}}
+                          <form action='/task/delete/{{this._id}}' method="POST">
+                            <input type="submit" name="delete-task" class="delete-task" value="Delete">
+                          </form>
+                        {{/if}}
+                      </div>
                       {{/if}}
-
-                      <form action='/task/complete/{{this._id}}' method="POST">
-                        <input type="submit" name="toggle-task" class="toggle-task" value="Complete">
-                      </form>
-                    </div>
             {{/each}}
             </ul>
         {{else}}
