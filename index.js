@@ -149,7 +149,8 @@ app.post('/user/login', function (req, res) {
   // Try to find this user by email
   Users.findOne({email: req.body.email}, function(err, user){
     if(!user || err){
-      return res.render('index', {errors: 'Invalid email address'});
+      res.send('Invalid email address');
+      return;
     }
 
     // See if the hash of their passwords match
@@ -213,6 +214,7 @@ app.post('/task/complete/:id', function(req, res){
       if (!task.isComplete) {
         change = true;
         var collaborators = task.collaborators;
+        // deletes empty elements 
         for (var i = collaborators.length - 1; i > -1; i--)
         {
           if (collaborators[i] == '')
@@ -220,14 +222,6 @@ app.post('/task/complete/:id', function(req, res){
             collaborators.splice(i, 1);
           }
         }
-        Users.findById(res.locals.currentUser._id, function(err, user){
-          if (err) {
-            res.send('Database error');
-          }else{
-            collaborators[collaborators.length] = user.email;
-          }
-        });
-        console.log(collaborators.length);
         for (var i = 0; i < collaborators.length; i++)
         {
           smtpTransport.sendMail(

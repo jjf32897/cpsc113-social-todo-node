@@ -147,7 +147,7 @@ input[type="email"]{
   border: 1px solid #3ac162;
   border-width: 1px 1px 3px;
   box-shadow: 0 -1px 0 rgba(255,255,255,0.1) inset;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
 }
 
 .delete-task {
@@ -158,7 +158,7 @@ input[type="email"]{
   text-align: center;
   font-style: normal;
   border-radius: 50px;
-  width: 70%;
+  width: 100%;
   border: 1px solid #d31212;
   border-width: 1px 1px 3px;
   box-shadow: 0 -1px 0 rgba(255,255,255,0.1) inset;
@@ -173,11 +173,23 @@ input[type="email"]{
     text-align: center;
     font-style: normal;
     border-radius: 50px;
-    width: 70%;
+    width: 100%;
     border: 1px solid #3ac162;
     border-width: 1px 1px 3px;
     box-shadow: 0 -1px 0 rgba(255,255,255,0.1) inset;
     margin-bottom: 10px;
+}
+
+.delete-task:hover{
+  background-color: #d31212;
+}
+
+.toggle-task:hover,
+.log-in-submit:hover,
+.create-task-submit:hover,
+.sign-up-submit:hover,
+#new-task-button:hover {
+  background-color: #3bc463;
 }
 
 fieldset {

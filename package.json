@@ -24,7 +24,7 @@
     "express-handlebars": "^2.0.1",
     "express-session": "^1.13.0",
     "mongoose": "^4.3.7",
-    "nodemailer": "^0.7.4"
+    "nodemailer": "^0.7.1"
   },
   "devDependencies": {
     "nodemon": "^1.8.1"
