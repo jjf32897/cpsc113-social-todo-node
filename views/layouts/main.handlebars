@@ -4,25 +4,28 @@
     <meta charset="utf-8">
     <title>CPSC113 Todo</title>
     <link href="/style.css" rel="stylesheet"/>
+
 </head>
 <body>
-
-<div class="container">
-    {{{body}}}
-</div>
-  <footer>
-  </footer>
+  <div class="container">
+        {{{body}}}
+  </div>
+<footer>
+</footer>
 
 <!-- javascript to slide in registration form for new users -->
 <script type="text/javascript">
   var registerForm = document.getElementById('register');
   var registerButton = document.getElementById('registerInstead');
+  var backdrop = document.getElementById('backdrop');
   registerButton.onclick = function() {
+    backdrop.style.display = "block";
     registerForm.style.display = "block";
   }
   window.onclick = function() {
     if (event.target == registerForm) {
       registerForm.style.display = "none";
+      backdrop.style.display="none";
     }
   }
 </script>
@@ -31,12 +34,15 @@
 <script type="text/javascript">
   var newTaskForm = document.getElementById('new-task-form');
   var newTaskButton = document.getElementById('new-task-button');
+  var backdrop = document.getElementById('backdrop');
   newTaskButton.onclick = function() {
+    backdrop.style.display = "block";
     newTaskForm.style.display = "block";
   }
   window.onclick = function() {
     if (event.target == newTaskForm) {
       newTaskForm.style.display = "none";
+      backdrop.style.display = "none";
     }
   }
 </script>

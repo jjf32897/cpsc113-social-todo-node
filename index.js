@@ -151,7 +151,6 @@ app.post('/user/login', function (req, res) {
   Users.findOne({email: req.body.email}, function(err, user){
     if(!user || err){
       return res.render('index', {errors: 'Invalid email address'});
-      return;
     }
 
     // See if the hash of their passwords match
