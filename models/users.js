@@ -23,6 +23,7 @@ var UserSchema = new Schema({
     hashed_password: stringField
 });
 
+// prepares user password for saving
 UserSchema.pre('save', function(next) {
     var user = this;
 
@@ -44,15 +45,12 @@ UserSchema.pre('save', function(next) {
     });
 });
 
+// compares entered password with hashed password in database
 UserSchema.methods.comparePassword = function(candidatePassword, cb) {
     bcrypt.compare(candidatePassword, this.hashed_password, function(err, isMatch) {
         if (err) return cb(err);
         cb(null, isMatch);
     });
 };
-
-UserSchema.statics.count = function (cb) {
-  return this.model('Users').find({}, cb);
-}
 
 module.exports = mongoose.model('Users', UserSchema);

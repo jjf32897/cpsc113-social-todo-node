@@ -11,6 +11,7 @@ mongoose.connect(process.env.MONGO_URL);
 var Users = require('./models/users.js');
 var Tasks = require('./models/tasks.js');
 
+// creates the nodemailer to give the app email functionality
 var smtpTransport = nodemailer.createTransport("SMTP",{
     service: "Gmail",
     auth: {
@@ -176,7 +177,7 @@ app.get('/user/logout', function(req, res){
 //  the user to be logged in.
 app.use(isLoggedIn);
 
-// Handle submission of new task form
+// creates a new task based on form submission
 app.post('/task/create', function(req, res){
   var newTask = new Tasks();
   newTask.owner = res.locals.currentUser._id;
@@ -204,7 +205,8 @@ app.post('/task/delete/:id', function(req, res){
   });
 });
 
-//marks a task as complete and sends an email to all users collaborating on the task
+//toggles the completeness of task and sends an email to all users collaborating
+// on the task when completed
 app.post('/task/complete/:id', function(req, res){
   Tasks.findById(req.params.id, function(err, task){
     if (err) {
@@ -213,32 +215,34 @@ app.post('/task/complete/:id', function(req, res){
       var change = false;
       if (!task.isComplete) {
         change = true;
-      //   var collaborators = task.collaborators;
-      //   // deletes empty elements
-      //   for (var i = collaborators.length - 1; i > -1; i--)
-      //   {
-      //     if (collaborators[i] == '')
-      //     {
-      //       collaborators.splice(i, 1);
-      //     }
-      //   }
-      //   for (var i = 0; i < collaborators.length; i++)
-      //   {
-      //     smtpTransport.sendMail(
-      //       {
-      //         from: 'Jo-Jo\'s CPSC113 Todo Notifier',
-      //         to: collaborators[i],
-      //         subject: 'One of your tasks has been completed!',
-      //         text: 'Your task ' + task.title + ' has been completed',
-      //         html: 'Your task <b>' + task.title + '</b> has been completed.'
-      //       }
-      //       , function(err, info){
-      //       if(err)
-      //       {
-      //         return console.log(err);
-      //       }
-      //     });
-      //   }
+        var collaborators = task.collaborators;
+        // deletes empty elements
+        for (var i = collaborators.length - 1; i > -1; i--)
+        {
+          if (collaborators[i] == '')
+          {
+            collaborators.splice(i, 1);
+          }
+        }
+
+        //generates an email for each collaborator and sends it
+        for (var i = 0; i < collaborators.length; i++)
+        {
+          smtpTransport.sendMail(
+            {
+              from: 'Jo-Jo\'s CPSC113 Todo Notifier',
+              to: collaborators[i],
+              subject: 'One of your tasks has been completed!',
+              text: 'Your task ' + task.title + ' has been completed',
+              html: 'Your task <b>' + task.title + '</b> has been completed.'
+            }
+            , function(err, info){
+            if(err)
+            {
+              return console.log(err);
+            }
+          });
+        }
       }
       Tasks.update({_id: req.params.id}, {isComplete: change}, function(err){
       if (err) {

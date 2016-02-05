@@ -3,6 +3,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema,
     ObjectId = Schema.ObjectId;
 
+// define the properties of the description string
 var stringField = {
     type: String,
     minlength: 1,
