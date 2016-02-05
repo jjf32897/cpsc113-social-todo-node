@@ -180,8 +180,13 @@ input[type="email"]{
     margin-bottom: 10px;
 }
 
-.delete-task:hover{
+.delete-task:hover {
   background-color: #d31212;
+}
+
+.delete-task:active {
+  background-color: #bc1010;
+  transform: translateY(2px);
 }
 
 .toggle-task:hover,
@@ -191,6 +196,16 @@ input[type="email"]{
 #new-task-button:hover,
 #registerInstead:hover {
   background-color: #3bc463;
+}
+
+.toggle-task:active,
+.log-in-submit:active,
+.create-task-submit:active,
+.sign-up-submit:active,
+#new-task-button:active,
+#registerInstead:active {
+  background-color: #35b059;
+  transform: translateY(2px);
 }
 
 fieldset {

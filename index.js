@@ -149,7 +149,7 @@ app.post('/user/login', function (req, res) {
   // Try to find this user by email
   Users.findOne({email: req.body.email}, function(err, user){
     if(!user || err){
-      res.send('Invalid email address');
+      return res.render('index', {errors: 'Invalid email address'});
       return;
     }
 
@@ -186,7 +186,7 @@ app.post('/task/create', function(req, res){
   newTask.isComplete = false;
   newTask.save(function(err, savedTask){
     if(err || !savedTask){
-      res.send('Error saving task!');
+      res.send('Error saving task');
     }else{
       res.redirect('/');
     }
@@ -197,7 +197,7 @@ app.post('/task/create', function(req, res){
 app.post('/task/delete/:id', function(req, res){
   Tasks.remove({_id: req.params.id}, function(err){
     if (err) {
-      res.send('Error deleting task');
+      return res.render('index', {errors: 'Error deleting task!'});
     }else{
       res.redirect('/');
     }
@@ -208,41 +208,41 @@ app.post('/task/delete/:id', function(req, res){
 app.post('/task/complete/:id', function(req, res){
   Tasks.findById(req.params.id, function(err, task){
     if (err) {
-      res.send('Error finding task');
+      return res.render('index', {errors: 'Error finding task'});
     }else{
       var change = false;
       if (!task.isComplete) {
         change = true;
-        var collaborators = task.collaborators;
-        // deletes empty elements 
-        for (var i = collaborators.length - 1; i > -1; i--)
-        {
-          if (collaborators[i] == '')
-          {
-            collaborators.splice(i, 1);
-          }
-        }
-        for (var i = 0; i < collaborators.length; i++)
-        {
-          smtpTransport.sendMail(
-            {
-              from: 'Jo-Jo\'s CPSC113 Todo Notifier',
-              to: collaborators[i],
-              subject: 'One of your tasks has been completed!',
-              text: 'Your task ' + task.title + ' has been completed',
-              html: 'Your task <b>' + task.title + '</b> has been completed.'
-            }
-            , function(err, info){
-            if(err)
-            {
-              return console.log(err);
-            }
-          });
-        }
+      //   var collaborators = task.collaborators;
+      //   // deletes empty elements
+      //   for (var i = collaborators.length - 1; i > -1; i--)
+      //   {
+      //     if (collaborators[i] == '')
+      //     {
+      //       collaborators.splice(i, 1);
+      //     }
+      //   }
+      //   for (var i = 0; i < collaborators.length; i++)
+      //   {
+      //     smtpTransport.sendMail(
+      //       {
+      //         from: 'Jo-Jo\'s CPSC113 Todo Notifier',
+      //         to: collaborators[i],
+      //         subject: 'One of your tasks has been completed!',
+      //         text: 'Your task ' + task.title + ' has been completed',
+      //         html: 'Your task <b>' + task.title + '</b> has been completed.'
+      //       }
+      //       , function(err, info){
+      //       if(err)
+      //       {
+      //         return console.log(err);
+      //       }
+      //     });
+      //   }
       }
       Tasks.update({_id: req.params.id}, {isComplete: change}, function(err){
       if (err) {
-        res.send('Error updating task');
+        return res.render('index', {errors: 'Error updating task!'});
       }else{
         res.redirect('/');
       }

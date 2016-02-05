@@ -1,9 +1,7 @@
-<h4><a href="/user/logout">Logout</a></h4>
-
-{{#if errors}}
-  <div style="color:red" class="validation-error">
-    {{errors}}
-  </div>
+{{#if currentUser}}
+  <h4><a href="/user/logout">Logout</a></h4>
+{{else}}
+  <a href="/user/logout"></a>
 {{/if}}
 
 {{#if currentUser}}
@@ -59,7 +57,12 @@
     </div>
 {{else}}
 
-<h1>hi</h1>
+<h1>DoGether &#128588;</h1>
+{{#if errors}}
+  <div style="color:red" class="validation-error">
+    {{errors}}
+  </div>
+{{/if}}
 <div id="login">
   <form class="login-form" action="/user/login" method="POST">
     <h3>Sign in to see your tasks</h3>
