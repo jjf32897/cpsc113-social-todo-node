@@ -188,7 +188,8 @@ input[type="email"]{
 .log-in-submit:hover,
 .create-task-submit:hover,
 .sign-up-submit:hover,
-#new-task-button:hover {
+#new-task-button:hover,
+#registerInstead:hover {
   background-color: #3bc463;
 }
 
